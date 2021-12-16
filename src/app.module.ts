@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { SpaceModule } from './space/space.module';
 import { PostModule } from './post/post.module';
 import { ChatModule } from './chat/chat.module';
+import { join } from 'path/posix';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { ChatModule } from './chat/chat.module';
       username: 'root',
       password: '170180',
       database: 'semi-classum-db',
-      entities: [],
+      entities: [join(__dirname, '**/*.entity.ts')],
       synchronize: true,
     }),
     UserModule,
