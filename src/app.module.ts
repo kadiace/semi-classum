@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { SpaceModule } from './space/space.module';
-import { UsModule } from './us/us.module';
 import { PostModule } from './post/post.module';
 import { ChatModule } from './chat/chat.module';
 
@@ -12,7 +11,7 @@ import { ChatModule } from './chat/chat.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: '170180',
@@ -22,7 +21,6 @@ import { ChatModule } from './chat/chat.module';
     }),
     UserModule,
     SpaceModule,
-    UsModule,
     PostModule,
     ChatModule
   ],
