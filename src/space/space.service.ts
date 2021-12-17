@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
@@ -7,19 +8,22 @@ import { Space } from './entities/space.entity';
 
 @Injectable()
 export class SpaceService {
-  constructor(@InjectRepository(Space) private space: Repository<Space>) {
-    this.space = space;
-  }
-  create(createSpaceDto: CreateSpaceDto) {
-    return this.space.save(createSpaceDto);
+  constructor(
+    @InjectRepository(Space) private spaceService: Repository<Space>) {}
+  
+  create(user: User,createSpaceDto: CreateSpaceDto) {
+    const space = new Space()
+    space.title = createSpaceDto.title
+    space.admin = user
+    return this.spaceService.save(space);
   }
 
   findAll() {
-    return this.space.find();
+    return this.spaceService.find();
   }
 
   findOne(id: number) {
-    return this.space.findOne({id});
+    return this.spaceService.findOne({id});
   }
 
   update(id: number, updateSpaceDto: UpdateSpaceDto) {
@@ -27,6 +31,6 @@ export class SpaceService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} space`;
+    return this.spaceService.delete({id});
   }
 }

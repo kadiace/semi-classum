@@ -2,14 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SpaceService } from './space.service';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('space')
 export class SpaceController {
-  constructor(private readonly spaceService: SpaceService) {}
+  constructor(private readonly spaceService: SpaceService,
+    private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createSpaceDto: CreateSpaceDto) {
-    return this.spaceService.create(createSpaceDto);
+  async create(@Body() createSpaceDto: CreateSpaceDto) {
+    const user = this.userService.findOne(createSpaceDto.adminId)
+    return this.spaceService.create(await user, createSpaceDto);
   }
 
   @Get()
