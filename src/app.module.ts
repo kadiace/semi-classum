@@ -18,6 +18,7 @@ import { join } from 'path/posix';
       password: '170180',
       database: 'semi-classum-db',
       autoLoadEntities: true,
+      // entities: [join(__dirname, '/**/entities/*.entity.ts')],
       synchronize: true,
       keepConnectionAlive: true,
     }),
