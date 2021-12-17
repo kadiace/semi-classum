@@ -7,6 +7,7 @@ import { SpaceModule } from './space/space.module';
 import { PostModule } from './post/post.module';
 import { ChatModule } from './chat/chat.module';
 import { join } from 'path/posix';
+import { UserspaceModule } from './userspace/userspace.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { join } from 'path/posix';
     UserModule,
     SpaceModule,
     PostModule,
-    ChatModule
+    ChatModule,
+    UserspaceModule
   ],
   controllers: [AppController],
   providers: [AppService],

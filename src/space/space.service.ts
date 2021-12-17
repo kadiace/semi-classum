@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { CreateUserspaceDto } from 'src/userspace/dto/create-userspace.dto';
+import { UserspaceService } from 'src/userspace/userspace.service';
 import { Repository } from 'typeorm';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
@@ -9,13 +11,20 @@ import { Space } from './entities/space.entity';
 @Injectable()
 export class SpaceService {
   constructor(
-    @InjectRepository(Space) private spaceService: Repository<Space>) {}
+    @InjectRepository(Space) private spaceService: Repository<Space>,
+    private readonly userspaceService: UserspaceService) {}
   
-  create(user: User,createSpaceDto: CreateSpaceDto) {
-    const space = new Space()
-    space.title = createSpaceDto.title
-    space.admin = user
-    return this.spaceService.save(space);
+  async create(user: User,createSpaceDto: CreateSpaceDto) {
+    const temp = new Space()
+    temp.title = createSpaceDto.title
+    temp.admin = user
+    const space = this.spaceService.save(temp);
+
+    const createUserspaceDto = new CreateUserspaceDto()
+    createUserspaceDto.user = user
+    createUserspaceDto.space = await space
+    
+    return this.userspaceService.create(createUserspaceDto)
   }
 
   findAll() {
