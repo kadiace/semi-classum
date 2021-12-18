@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "src/user/entities/user.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
+import { Post } from "src/post/entities/post.entity";
 
 @Entity()
 export class Space {
@@ -21,4 +22,8 @@ export class Space {
     @OneToMany(() => Userspace, (userspace) => userspace.user,
         { cascade: true } )
     users: Userspace[];
+
+    @OneToMany(() => Post, (post) => post.space,
+        { cascade: true } )
+    posts: Post[];
 }

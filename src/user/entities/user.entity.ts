@@ -28,6 +28,7 @@ export class User {
         { cascade: true } )
     adspaces: Space[];
 
-    @OneToMany(() => Post, (post) => post.uploader)
+    @OneToMany(() => Post, (post) => post.uploader,
+        { nullable: true })
     posts: Post[];
 }
