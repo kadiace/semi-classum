@@ -43,6 +43,5 @@ export class SpaceController {
         else { return this.spaceService.remove(+ids_[0]) }
       }
     }
-    // 
   }
 }

@@ -7,24 +7,24 @@ import { Userspace } from './entities/userspace.entity';
 
 @Injectable()
 export class UserspaceService {
-  constructor(@InjectRepository(Userspace) private userSpaceService: Repository<Userspace>) {}
+  constructor(@InjectRepository(Userspace) private userspaceService: Repository<Userspace>) {}
   create(createUserspaceDto: CreateUserspaceDto) {
-    return this.userSpaceService.save(createUserspaceDto)
+    return this.userspaceService.save(createUserspaceDto)
   }
 
   findAll() {
-    return `This action returns all userspace`;
+    return this.userspaceService.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} userspace`;
+    return this.userspaceService.findOne(id);
   }
 
   update(id: number, updateUserspaceDto: UpdateUserspaceDto) {
-    return `This action updates a #${id} userspace`;
+    return this.userspaceService.update(id, updateUserspaceDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} userspace`;
+    return this.userspaceService.delete({id});
   }
 }
