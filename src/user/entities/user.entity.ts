@@ -20,10 +20,12 @@ export class User {
     @Column()
     profile: string;
 
-    @OneToMany(() => Userspace, (userspace) => userspace.user)
+    @OneToMany(() => Userspace, (userspace) => userspace.user,
+        { cascade: true } )
     spaces: Userspace[];
 
-    @OneToMany(() => Space, (space) => space.admin)
+    @OneToMany(() => Space, (space) => space.admin,
+        { cascade: true } )
     adspaces: Space[];
 
     @OneToMany(() => Post, (post) => post.uploader)

@@ -14,9 +14,11 @@ export class SpaceService {
     @InjectRepository(Space) private spaceService: Repository<Space>,
     private readonly userspaceService: UserspaceService) {}
   
+  // create space, save who made this, link them to 'userspace'.
   async create(user: User,createSpaceDto: CreateSpaceDto) {
     const temp = new Space()
     temp.title = createSpaceDto.title
+    temp.adminId = user.id
     temp.admin = user
     const space = this.spaceService.save(temp);
 
@@ -40,6 +42,7 @@ export class SpaceService {
   }
 
   remove(id: number) {
+    console.log(['spaceservice remove', id])
     return this.spaceService.delete({id});
   }
 }

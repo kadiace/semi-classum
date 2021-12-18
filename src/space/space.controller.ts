@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ForbiddenException, NotFoundException, ConflictException } from '@nestjs/common';
 import { SpaceService } from './space.service';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
@@ -30,8 +30,19 @@ export class SpaceController {
     return this.spaceService.update(+id, updateSpaceDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.spaceService.remove(+id);
+  @Delete(':ids')
+  async remove(@Param('ids') ids: string) {
+
+    const ids_ = ids.split('|')
+    if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
+    else {
+      const space = this.spaceService.findOne(+ids_[0])
+      if (!(await space)) { console.log('Cannot find space.') }
+      else {
+        if ((await space).adminId != +ids_[1]){ console.log('Not admin.') }
+        else { return this.spaceService.remove(+ids_[0]) }
+      }
+    }
+    // 
   }
 }

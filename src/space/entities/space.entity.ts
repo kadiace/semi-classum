@@ -10,10 +10,15 @@ export class Space {
     @Column()
     title: string;
 
-    @ManyToOne(() => User, (user) => user.adspaces)
-    @JoinColumn({name: 'adminId'})
+    @Column( {nullable: false} )
+    adminId: number;
+
+    @ManyToOne(() => User, (user) => user.adspaces,
+        { onDelete: 'CASCADE'} )
+    @JoinColumn()
     admin: User;
 
-    @OneToMany(() => Userspace, (userspace) => userspace.user)
+    @OneToMany(() => Userspace, (userspace) => userspace.user,
+        { cascade: true } )
     users: Userspace[];
 }

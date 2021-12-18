@@ -7,11 +7,13 @@ export class Userspace {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User, (user) => user.spaces)
+    @ManyToOne(() => User, (user) => user.spaces,
+        { onDelete: 'CASCADE'} )
     @JoinColumn({name: 'userId'})
     user: User
 
-    @ManyToOne(() => Space, (space) => space.users)
+    @ManyToOne(() => Space, (space) => space.users,
+        { onDelete: 'CASCADE'} )
     @JoinColumn({name: 'spaceId'})
     space: Space
 }
