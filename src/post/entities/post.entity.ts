@@ -4,7 +4,7 @@ import { Chat } from "src/chat/entities/chat.entity";
 import { Space } from "src/space/entities/space.entity";
 
 @Entity()
-export class Post {
+class Post {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -34,3 +34,6 @@ export class Post {
         { cascade: true } )
     chats: Chat[];
 }
+
+export { Post };
+export { Post as Post_ };

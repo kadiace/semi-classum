@@ -1,9 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PostService } from 'src/post/post.service';
 import { UserService } from 'src/user/user.service';
+import { getRepository } from 'typeorm';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { Chat } from './entities/chat.entity';
 
 @Controller('chat')
 export class ChatController {
@@ -38,15 +40,22 @@ export class ChatController {
 
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
-    const ids_ = ids.split('/')
+    const ids_ = ids.split('|')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
-      const post = this.chatService.findOne(+ids_[0])
-      if (!(await post)) console.log('Cannot find chat')
+      const info = await getRepository(Chat)
+        .createQueryBuilder('chat')
+        .leftJoinAndSelect('chat.post', 'post')
+        .leftJoinAndSelect('post.space', 'space')
+        .where('chat.id = :id', { id: +ids[0] })
+        .getOne()
+      if (!info) { console.log('Cannot find space.') } 
       else {
-        return this.chatService.remove(+ids)
+        if ((+ids_[1] != info.commenterId) && (+ids_[1] != info.post.space.adminId)) {
+              console.log('Permission denied')
+            }
+            else { return this.chatService.remove(+ids_[0]) }
       }
     }
-    // return this.chatService.remove(+id);
   }
 }
