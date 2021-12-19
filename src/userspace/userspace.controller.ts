@@ -3,7 +3,7 @@ import { UserspaceService } from './userspace.service';
 import { CreateUserspaceDto } from './dto/create-userspace.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
-import { getConnection } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import { Userspace } from './entities/userspace.entity';
 
 @Controller('userspace')
@@ -38,25 +38,40 @@ export class UserspaceController {
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
 
-    const ids_ = ids.split('/')
+    const ids_ = ids.split('|')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
-      const user = this.userService.findOne(+ids_[0])
-      const space = this.spaceService.findOne(+ids_[1])
+      // const user = this.userService.findOne(+ids_[0])
+      // const space = this.spaceService.findOne(+ids_[1])
 
       // get userspace id, remove.
-      if (!(await user) || !(await space)) { console.log('Invalid user, space') }
-      else {
-        const userspace = await getConnection()
-          .createQueryBuilder()
-          .select("userspace")
-          .from(Userspace, "userspace")
-          .where('userspace.userId = :userId', { userId : (await user).id })
-          .where('userspace.spaceId = :spaceId', { spaceId : (await space).id })
-          .getOne();
-        if (!userspace) { console.log('There is no user&space relationship.') }
-        else { return this.userspaceService.remove(userspace.id) }
+      // if (!(await user) || !(await space)) { console.log('Invalid user, space') }
+      // else {
+        // const userspace = await getConnection()
+        //   .createQueryBuilder()
+        //   .select("userspace")
+        //   .from(Userspace, "userspace")
+        //   .where('userspace.userId = :userId', { userId : (await user).id })
+        //   .where('userspace.spaceId = :spaceId', { spaceId : (await space).id })
+        //   .getOne();
+
+        // if (!userspace) { console.log('There is no user&space relationship.') }
+        // else { return this.userspaceService.remove(userspace.id) }
+
+        const info = await getRepository(Userspace)
+          .createQueryBuilder('userspace')
+          .leftJoinAndSelect('userspace.space', 'space')
+          .where('userspace.userId = :userId', { userId : +ids_[0] })
+          .where('userspace.spaceId = :spaceId', { spaceId : +ids_[1] })
+          .getOne()
+
+        if (!info) { console.log('There is no user&space relationship.') }
+        else { 
+          if (info.space.adminId == info.userId) { return this.spaceService.remove(info.spaceId) }
+          else { return this.userspaceService.remove(info.id) }
+        }
+        
       }
-    }
+    // }
   }
 }
