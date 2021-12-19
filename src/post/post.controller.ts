@@ -4,6 +4,9 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
+import { createQueryBuilder, getConnection, getRepository,} from 'typeorm';
+import { Space } from '../space/entities/space.entity'
+// import { Post } from './entities/post.entity';
 
 @Controller('post')
 export class PostController {
@@ -15,13 +18,17 @@ export class PostController {
   async create(@Body() createPostDto: CreatePostDto) {
     const space = this.spaceService.findOne(createPostDto.spaceId)
 
-    if (createPostDto.isnotify
-      && (createPostDto.uploaderId != (await space).adminId)) {
-      console.log('Only admin can post notify.')
-    }
+    if (!(await space)) { console.log('Invalid space') }
     else {
-      const user = this.userService.findOne(createPostDto.uploaderId)
-      return this.postService.create(await user, await space, createPostDto);
+      if (createPostDto.isnotify
+        && (createPostDto.uploaderId != (await space).adminId)) {
+        console.log('Only admin can post notify.')
+      }
+      else {
+        const user = this.userService.findOne(createPostDto.uploaderId)
+        if (!(await user)) { console.log('Invalid user') }
+        else { return this.postService.create(await user, await space, createPostDto); }
+      }
     }
   }
 
@@ -40,17 +47,37 @@ export class PostController {
     return this.postService.update(+id, updatePostDto);
   }
 
+  // @Delete(':ids')
+  // async remove(@Param('ids') ids: string) {
+  //   const ids_ = ids.split('/')
+  //   if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
+  //   else {
+  //     const post = this.postService.findOne(+ids_[0])
+  //     if (!(await post)) { console.log('Cannot find space.') }
+  //     else {
+  //       if ((await post).uploaderId != +ids_[1]){ console.log('Not uploader.') }
+  //       else { return this.postService.remove(+ids_[0]) }
+  //     }
+  //   }
+  // }
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
+    console.log(ids)
     const ids_ = ids.split('|')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
-      const post = this.postService.findOne(+ids_[0])
-      if (!(await post)) { console.log('Cannot find space.') }
-      else {
-        if ((await post).uploaderId != +ids_[1]){ console.log('Not uploader.') }
-        else { return this.postService.remove(+ids_[0]) }
-      }
+      // const info = await getConnection()
+      //   .createQueryBuilder()
+      //   .select('space.adminId')
+      //   .from(Space, 'space').from(Post_, 'post')
+      //   .where('post.spaceId = space.id')
+      //   .getOne();
+        
+      // console.log(info)
+        // if (ids_[1] != info.adminId || ids_[1] != info.uploaderId ) {
+        //   console.log("Permission denied.")
+        // }
+        // else { return this.postService.remove(+ids_[0]) }
     }
   }
 }

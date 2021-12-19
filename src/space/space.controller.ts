@@ -33,7 +33,7 @@ export class SpaceController {
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
 
-    const ids_ = ids.split('|')
+    const ids_ = ids.split('/')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
       const space = this.spaceService.findOne(+ids_[0])

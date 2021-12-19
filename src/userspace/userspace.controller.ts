@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserspaceService } from './userspace.service';
 import { CreateUserspaceDto } from './dto/create-userspace.dto';
-import { UpdateUserspaceDto } from './dto/update-userspace.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
 import { getConnection } from 'typeorm';
@@ -39,7 +38,7 @@ export class UserspaceController {
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
 
-    const ids_ = ids.split('|')
+    const ids_ = ids.split('/')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
       const user = this.userService.findOne(+ids_[0])
@@ -60,23 +59,4 @@ export class UserspaceController {
       }
     }
   }
-  // // Version 2, just delete userspace with userid, spaceid.
-  // @Delete(':ids')
-  // async remove(@Param('ids') ids: string) {
-
-  //   const ids_ = ids.split('|')
-  //   if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
-  //   else {
-
-  //     const userspace = await getConnection()
-  //       .createQueryBuilder()
-  //       .select("userspace")
-  //       .from(Userspace, "userspace")
-  //       .where('userspace.userId = :userId', { userId : +ids_[0] })
-  //       .where('userspace.spaceId = :spaceId', { spaceId : +ids_[1] })
-  //       .getOne();
-  //     if (!userspace) { console.log('There is no user&space relationship.') }
-  //     else { return this.userspaceService.remove(userspace.id) }
-  //   }
-  // }
 }

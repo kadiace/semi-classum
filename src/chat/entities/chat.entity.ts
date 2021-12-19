@@ -10,9 +10,17 @@ export class Chat {
     @Column()
     text : string;
 
-    @ManyToOne(() => User, (user) => user.posts)
-    uploader: User;
+    @Column( { nullable: true } )
+    commenterId: number;
 
-    @ManyToOne(() => Post, (post) => post.chats)
+    @ManyToOne(() => User, (user) => user.chats,
+        { onDelete: 'SET NULL' } )
+    commenter: User;
+
+    @Column( { nullable: false } )
+    postId: number;
+
+    @ManyToOne(() => Post, (post) => post.chats,
+        {onDelete: 'CASCADE'})
     post: Post;
 }

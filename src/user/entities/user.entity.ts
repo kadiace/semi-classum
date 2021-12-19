@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColum
 import { Space } from "src/space/entities/space.entity";
 import { Post } from "src/post/entities/post.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
+import { Chat } from "src/chat/entities/chat.entity";
 
 @Entity()
 export class User {
@@ -31,4 +32,8 @@ export class User {
     @OneToMany(() => Post, (post) => post.uploader,
         { nullable: true })
     posts: Post[];
+
+    @OneToMany(() => Chat, (chat) => chat.commenter,
+        { nullable: true })
+    chats: Chat[];
 }

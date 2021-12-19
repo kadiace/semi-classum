@@ -14,22 +14,23 @@ export class Post {
     @Column()
     isnotify : boolean;
 
-    @Column( {nullable: true} )
+    @Column( { nullable: true } )
     uploaderId: number;
 
     @ManyToOne(() => User, (user) => user.posts,
-        { onDelete: 'SET NULL'} )
+        { onDelete: 'SET NULL' } )
     @JoinColumn()
     uploader: User;
 
-    @Column( {nullable: false} )
+    @Column( { nullable: false } )
     spaceId: number;
 
     @ManyToOne(() => Space, (space) => space.posts,
-        { onDelete: 'CASCADE'} )
+        { onDelete: 'CASCADE' } )
     @JoinColumn()
     space: Space;
 
-    @OneToMany(() => Chat, (chat) => chat.post)
+    @OneToMany(() => Chat, (chat) => chat.post,
+        { cascade: true } )
     chats: Chat[];
 }

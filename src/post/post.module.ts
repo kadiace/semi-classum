@@ -11,7 +11,7 @@ import { Userspace } from 'src/userspace/entities/userspace.entity';
 import { UserspaceService } from 'src/userspace/userspace.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Space, Userspace])],
+  imports: [TypeOrmModule.forFeature([Post , User, Space, Userspace])],
   controllers: [PostController],
   providers: [PostService, UserService, SpaceService, UserspaceService]
 })
