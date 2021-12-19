@@ -66,18 +66,23 @@ export class PostController {
     const ids_ = ids.split('|')
     if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
     else {
-      // const info = await getConnection()
-      //   .createQueryBuilder()
-      //   .select('space.adminId')
-      //   .from(Space, 'space').from(Post_, 'post')
-      //   .where('post.spaceId = space.id')
-      //   .getOne();
-        
-      // console.log(info)
-        // if (ids_[1] != info.adminId || ids_[1] != info.uploaderId ) {
-        //   console.log("Permission denied.")
-        // }
-        // else { return this.postService.remove(+ids_[0]) }
+      console.log('a')
+      const post = await this.postService.findOne(+ids_[0])
+      if (!post) { console.log('Cannot find space.') }
+      else {
+        console.log('b')
+        const info = await getConnection()
+          .createQueryBuilder()
+          .select('space.adminId')
+          .from(Space, 'space')
+          .where('space.id = :spaceId', { spaceId : post.spaceId })
+          .getOne()
+        console.log(+ids_[1], post.uploaderId, info.adminId)
+        if ((+ids_[1] != post.uploaderId) && (+ids_[1] != info.adminId)) {
+          console.log('Permission denied')
+        }
+        else { return this.postService.remove(+ids_[0]) }
+      }
     }
   }
 }
