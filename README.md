@@ -1,6 +1,6 @@
 ### 설치 및 프로젝트 실행 방법
-1. 프로젝트를 디렉토리에서 아래의 커맨드를 입력합니다.
-  > `$ git clone https://github.com/kadiace/semi-classum.git`
+1. 프로젝트를 디렉토리에서 다음의 커맨드를 입력합니다.
+    `$ git clone https://github.com/kadiace/semi-classum.git`
 2. 프로젝트의 최상위 디렉토리에 위치한 `app.module.ts` 파일의 `TypeOrmModule.forRoot({})` 부분 속 mysql 세팅을 컴퓨터의 mysql 서버에 맞게 조정해줍니다.
     1. 이 때 db 이름은 'semi-classum-db' 로 만들어주셔야 프로젝트와 연동이 가능합니다.
     2. db 이름만 동일하다면 테이블은 자동으로 생성됩니다. 
