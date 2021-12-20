@@ -8,7 +8,13 @@ export class Chat {
     id: number;
 
     @Column()
-    text : string;
+    text: string;
+
+    @Column( { update: false } )
+    isrecomment: boolean;
+
+    @Column( { nullable: true } )
+    precommentId: number;
 
     @Column( { nullable: true } )
     commenterId: number;

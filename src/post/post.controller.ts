@@ -24,6 +24,10 @@ export class PostController {
         && (createPostDto.uploaderId != (await space).adminId)) {
         console.log('Only admin can post notify.')
       }
+      else if (!createPostDto.isnotify
+        && (createPostDto.uploaderId == (await space).adminId) ) {
+        console.log('Admin can post only notify.')
+      }
       else {
         const user = this.userService.findOne(createPostDto.uploaderId)
         if (!(await user)) { console.log('Invalid user') }

@@ -15,6 +15,8 @@ export class ChatService {
   create(post: Post, commenter: User, createChatDto: CreateChatDto) {
     const temp = new Chat()
     temp.text = createChatDto.text
+    temp.isrecomment = createChatDto.isrecomment
+    temp.precommentId = createChatDto.precommentId
     temp.commenterId = createChatDto.commenterId
     temp.commenter = commenter
     temp.postId = createChatDto.postId

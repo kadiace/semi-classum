@@ -3,7 +3,7 @@ import { UserspaceService } from './userspace.service';
 import { CreateUserspaceDto } from './dto/create-userspace.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
-import { getConnection, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Userspace } from './entities/userspace.entity';
 
 @Controller('userspace')
