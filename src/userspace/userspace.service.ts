@@ -20,9 +20,9 @@ export class UserspaceService {
     return this.userspaceService.findOne(id);
   }
 
-  update(id: number, updateUserspaceDto: UpdateUserspaceDto) {
-    return this.userspaceService.update(id, updateUserspaceDto);
-  }
+  // update(id: number, updateUserspaceDto: UpdateUserspaceDto) {
+  //   return this.userspaceService.update(id, updateUserspaceDto);
+  // }
 
   remove(id: number) {
     return this.userspaceService.delete({id});

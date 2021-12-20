@@ -31,7 +31,7 @@ export class ChatService {
   }
 
   update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
+    return this.chatService.update(id, updateChatDto);
   }
 
   remove(id: number) {
