@@ -10,23 +10,29 @@ export class LikeController {
     private readonly userService: UserService,
     private readonly chatService: ChatService) {}
 
-  @Post()
-  create(@Body() createLikeDto: CreateLikeDto) {
-    return this.likeService.create(createLikeDto);
-  }
-
   @Get()
   findAll() {
     return this.likeService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.likeService.findOne(+id);
+  @Get('user/:userId/chat/:commentId')
+  pressButton(@Param('userId') userId: string, @Param('commentId') commentId: string) {
+    return this.likeService.pressButton(+userId, +commentId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.likeService.remove(+id);
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.likeService.findByUser(+userId);
   }
+
+  @Get('chat/:commentId')
+  findByChat(@Param('commentId') commentId: string) {
+    return this.likeService.findByChat(+commentId);
+  }
+
+  @Get('chat/:commentId/count')
+  findCountOfChat(@Param('commentId') commentId: string) {
+    return this.likeService.findCountOfChat(+commentId);
+  }
+
 }

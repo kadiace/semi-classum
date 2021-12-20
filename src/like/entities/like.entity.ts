@@ -21,5 +21,5 @@ export class Like {
     @ManyToOne(() => Chat, (chat) => chat.likes ,
         { onDelete: 'CASCADE' } )
     @JoinColumn()
-    chat: Chat
+    comment: Chat
 }

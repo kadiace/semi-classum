@@ -10,7 +10,7 @@ export class CreateLikeDto {
     user: User
 
     @IsNumber()
-    chatId: number
+    commentId: number
 
-    chat: Chat
+    comment: Chat
 }

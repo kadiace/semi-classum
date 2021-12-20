@@ -47,6 +47,28 @@ export class SpaceService {
     else { return info.posts }
   }
 
+  async findQuestionBySpace(id: number) {
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.posts', 'post')
+        .where('space.id = :id', { id: id })
+        .where('post.isnotify = :bool', { bool: 0 })
+        .getOne()
+    if (!info) { console.log('there is no space.') }
+    else { return info.posts }
+  }
+
+  async findNotifyBySpace(id: number) {
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.posts', 'post')
+        .where('space.id = :id', { id: id })
+        .where('post.isnotify = :bool', { bool: 1 })
+        .getOne()
+    if (!info) { console.log('there is no space.') }
+    else { return info.posts }
+  }
+
   update(id: number, updateSpaceDto: UpdateSpaceDto) {
     return this.spaceService.update(id, updateSpaceDto);
   }

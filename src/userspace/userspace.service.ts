@@ -17,10 +17,6 @@ export class UserspaceService {
     return this.userspaceService.find();
   }
 
-  findOne(id: number) {
-    return this.userspaceService.findOne(id);
-  }
-
   async findByUser(id: number) {
     const info = await getRepository(User)
         .createQueryBuilder('user')

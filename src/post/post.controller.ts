@@ -48,6 +48,18 @@ export class PostController {
     return this.spaceService.findBySpace(+id);
   }
 
+  @Get('space/:id/notify/:bool')
+  findQuestionBySpace(@Param('id') id: string, @Param('bool') bool: string) {
+    if (+bool) { 
+      console.log('a')
+      this.spaceService.findNotifyBySpace(+id); 
+    }
+    else { 
+      console.log('b')
+      this.spaceService.findQuestionBySpace(+id); 
+    }
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);

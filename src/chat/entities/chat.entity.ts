@@ -31,7 +31,7 @@ export class Chat {
         {onDelete: 'CASCADE'})
     post: Post;
 
-    @OneToMany(() => Like, (like) => like.chat,
+    @OneToMany(() => Like, (like) => like.comment,
         { cascade: true } )
     likes: Like[]
 }

@@ -5,8 +5,6 @@ import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
 import { getRepository } from 'typeorm';
 import { Userspace } from './entities/userspace.entity';
-import { User } from 'src/user/entities/user.entity';
-import { SpaceController } from 'src/space/space.controller';
 
 @Controller('userspace')
 export class UserspaceController {
