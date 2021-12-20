@@ -3,6 +3,8 @@ import { SpaceService } from './space.service';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
 import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entities/user.entity';
+import { getRepository } from 'typeorm';
 
 @Controller('space')
 export class SpaceController {
@@ -23,6 +25,26 @@ export class SpaceController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.spaceService.findOne(+id);
+  }
+
+  @Get('admin/:id')
+  async findByAdmin(@Param('id') id: string) {
+    const info = await getRepository(User)
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.adspaces', 'space')
+        .where('user.id = :id', { id: id })
+        .getOne()
+    return info.adspaces
+  }
+
+  @Get('user/:id')
+  async findByUser(@Param('id') id: string) {
+    const info = await getRepository(User)
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.spaces', 'space')
+        .where('user.id = :id', { id: id })
+        .getOne()
+    console.log(info.spaces)
   }
 
   @Patch(':id')
