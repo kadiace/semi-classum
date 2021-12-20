@@ -4,7 +4,6 @@ import { Chat } from 'src/chat/entities/chat.entity';
 import { User } from 'src/user/entities/user.entity';
 import { getRepository, Repository } from 'typeorm';
 import { CreateLikeDto } from './dto/create-like.dto';
-import { UpdateLikeDto } from './dto/update-like.dto';
 import { Like } from './entities/like.entity';
 
 @Injectable()

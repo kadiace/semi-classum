@@ -1,14 +1,9 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { CreateLikeDto } from './dto/create-like.dto';
-import { UserService } from 'src/user/user.service';
-import { ChatService } from 'src/chat/chat.service';
 
 @Controller('like')
 export class LikeController {
-  constructor(private readonly likeService: LikeService,
-    private readonly userService: UserService,
-    private readonly chatService: ChatService) {}
+  constructor(private readonly likeService: LikeService,) {}
 
   @Get()
   findAll() {
@@ -34,5 +29,4 @@ export class LikeController {
   findCountOfChat(@Param('commentId') commentId: string) {
     return this.likeService.findCountOfChat(+commentId);
   }
-
 }

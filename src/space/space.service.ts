@@ -52,7 +52,7 @@ export class SpaceService {
         .createQueryBuilder('space')
         .leftJoinAndSelect('space.posts', 'post')
         .where('space.id = :id', { id: id })
-        .where('post.isnotify = :bool', { bool: 0 })
+        .andWhere('post.isnotify = :bool', { bool: 0 })
         .getOne()
     if (!info) { console.log('there is no space.') }
     else { return info.posts }
@@ -63,7 +63,7 @@ export class SpaceService {
         .createQueryBuilder('space')
         .leftJoinAndSelect('space.posts', 'post')
         .where('space.id = :id', { id: id })
-        .where('post.isnotify = :bool', { bool: 1 })
+        .andWhere('post.isnotify = :bool', { bool: 1 })
         .getOne()
     if (!info) { console.log('there is no space.') }
     else { return info.posts }

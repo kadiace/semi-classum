@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Space } from "src/space/entities/space.entity";
 import { Post } from "src/post/entities/post.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";

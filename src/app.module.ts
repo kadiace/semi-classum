@@ -6,7 +6,6 @@ import { UserModule } from './user/user.module';
 import { SpaceModule } from './space/space.module';
 import { PostModule } from './post/post.module';
 import { ChatModule } from './chat/chat.module';
-import { join } from 'path/posix';
 import { UserspaceModule } from './userspace/userspace.module';
 import { LikeModule } from './like/like.module';
 

@@ -37,10 +37,6 @@ export class UserspaceService {
     else { return info.users }
   }
 
-  // update(id: number, updateUserspaceDto: UpdateUserspaceDto) {
-  //   return this.userspaceService.update(id, updateUserspaceDto);
-  // }
-
   remove(id: number) {
     return this.userspaceService.delete({id});
   }

@@ -52,11 +52,11 @@ export class PostController {
   findQuestionBySpace(@Param('id') id: string, @Param('bool') bool: string) {
     if (+bool) { 
       console.log('a')
-      this.spaceService.findNotifyBySpace(+id); 
+      return this.spaceService.findNotifyBySpace(+id); 
     }
     else { 
       console.log('b')
-      this.spaceService.findQuestionBySpace(+id); 
+      return this.spaceService.findQuestionBySpace(+id); 
     }
   }
 
