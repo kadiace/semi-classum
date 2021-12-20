@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Space } from 'src/space/entities/space.entity';
+import { User } from 'src/user/entities/user.entity';
+import { getRepository, Repository } from 'typeorm';
 import { CreateUserspaceDto } from './dto/create-userspace.dto';
-import { UpdateUserspaceDto } from './dto/update-userspace.dto';
 import { Userspace } from './entities/userspace.entity';
 
 @Injectable()
@@ -18,6 +19,26 @@ export class UserspaceService {
 
   findOne(id: number) {
     return this.userspaceService.findOne(id);
+  }
+
+  async findByUser(id: number) {
+    const info = await getRepository(User)
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.spaces', 'space')
+        .where('user.id = :id', { id: id })
+        .getOne()
+    if (!info) { console.log('there is no user.') }
+    else { return info.spaces }
+  }
+
+  async findBySpace(id: number) {
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.users', 'user')
+        .where('space.id = :id', { id: id })
+        .getOne()
+    if (!info) { console.log('there is no user.') }
+    else { return info.users }
   }
 
   // update(id: number, updateUserspaceDto: UpdateUserspaceDto) {

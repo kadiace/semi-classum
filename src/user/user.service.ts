@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from "./entities/user.entity";
@@ -18,6 +18,16 @@ export class UserService {
 
   findOne(id: number) {
     return this.userService.findOne({id});
+  }
+
+  async findByAdmin(id: number) {
+    const info = await getRepository(User)
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.adspaces', 'space')
+        .where('user.id = :id', { id: id })
+        .getOne()
+    if (!info) { console.log('there is no user.') }
+    else { return info.adspaces }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

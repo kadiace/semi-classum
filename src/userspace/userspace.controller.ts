@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { UserspaceService } from './userspace.service';
 import { CreateUserspaceDto } from './dto/create-userspace.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
 import { getRepository } from 'typeorm';
 import { Userspace } from './entities/userspace.entity';
+import { User } from 'src/user/entities/user.entity';
+import { SpaceController } from 'src/space/space.controller';
 
 @Controller('userspace')
 export class UserspaceController {
@@ -30,29 +32,31 @@ export class UserspaceController {
     return this.userspaceService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userspaceService.findOne(+id);
+  @Get('user/:id')
+  async findByUser(@Param('id') id: string) {
+    return this.userspaceService.findByUser(+id)
   }
+
+  @Get('space/:id')
+  findBySpace(@Param('id') id: string) {
+    return this.userspaceService.findBySpace(+id);
+  }
+
   // check user id, and space id valid, and delete userspace.
-  @Delete(':ids')
-  async remove(@Param('ids') ids: string) {
+  @Delete('user/:userId/space/:spaceId')
+  async remove(@Param('userid') userId: string, @Param('spaceId') spaceId: string) {
+    const info = await getRepository(Userspace)
+      .createQueryBuilder('userspace')
+      .leftJoinAndSelect('userspace.space', 'space')
+      .where('userspace.userId = :userId', { userId : +userId })
+      .where('userspace.spaceId = :spaceId', { spaceId : +spaceId })
+      .getOne()
 
-    const ids_ = ids.split('|')
-    if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
-    else {
-      const info = await getRepository(Userspace)
-        .createQueryBuilder('userspace')
-        .leftJoinAndSelect('userspace.space', 'space')
-        .where('userspace.userId = :userId', { userId : +ids_[0] })
-        .where('userspace.spaceId = :spaceId', { spaceId : +ids_[1] })
-        .getOne()
-
-      if (!info) { console.log('There is no user&space relationship.') }
-      else { 
-        if (info.space.adminId == info.userId) { return this.spaceService.remove(info.spaceId) }
-        else { return this.userspaceService.remove(info.id) }
-      }
+    if (!info) { console.log('There is no user&space relationship.') }
+    else { 
+      if (info.space.adminId == info.userId) { return this.spaceService.removeForce(info.spaceId) }
+      else { return this.userspaceService.remove(info.id) }
     }
+    
   }
 }

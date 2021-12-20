@@ -3,6 +3,7 @@ import { Space } from "src/space/entities/space.entity";
 import { Post } from "src/post/entities/post.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
 import { Chat } from "src/chat/entities/chat.entity";
+import { Like } from "src/like/entities/like.entity";
 
 @Entity()
 export class User {
@@ -36,4 +37,8 @@ export class User {
     @OneToMany(() => Chat, (chat) => chat.commenter,
         { nullable: true })
     chats: Chat[];
+
+    @OneToMany(() => Like, (like) => like.user,
+        { cascade: true } )
+    lkchats: Like[]
 }

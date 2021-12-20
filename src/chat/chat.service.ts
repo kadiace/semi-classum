@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/post/entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Chat } from './entities/chat.entity';
@@ -36,7 +36,21 @@ export class ChatService {
     return this.chatService.update(id, updateChatDto);
   }
 
-  remove(id: number) {
-    return this.chatService.delete({id});
+  async remove(chatId: number, userId: number) {
+
+    const info = await getRepository(Chat)
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.post', 'post')
+      .leftJoinAndSelect('post.space', 'space')
+      .where('chat.id = :id', { id: chatId })
+      .getOne()
+    if (!info) { console.log('Cannot find space.') } 
+    else {
+      if ((userId != info.commenterId) 
+        && (userId != info.post.space.adminId)) {
+          console.log('Permission denied')
+      }
+      else { return this.chatService.delete(chatId); }
+    }
   }
 }

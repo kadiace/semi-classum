@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Space } from 'src/space/entities/space.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
@@ -35,7 +35,19 @@ export class PostService {
     return this.postService.update(id, updatePostDto);
   }
 
-  remove(id: number) {
-    return this.postService.delete({id});
+  async remove(postId: number, userId: number) {
+    const info = await getRepository(Post)
+        .createQueryBuilder('post')
+        .leftJoinAndSelect('post.space', 'space')
+        .where('post.id = :id', { id: postId })
+        .getOne()
+    if (!info) { console.log('Cannot find space.') } 
+    else {
+      if ((userId != info.uploaderId) 
+        && (userId != info.space.adminId)) {
+            console.log('Permission denied')
+      }
+      else { this.postService.delete(postId); }
+    }
   }
 }

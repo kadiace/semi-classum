@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "src/user/entities/user.entity";
 import { Post } from "src/post/entities/post.entity";
+import { Like } from "src/like/entities/like.entity";
 
 @Entity()
 export class Chat {
@@ -29,4 +30,8 @@ export class Chat {
     @ManyToOne(() => Post, (post) => post.chats,
         {onDelete: 'CASCADE'})
     post: Post;
+
+    @OneToMany(() => Like, (like) => like.chat,
+        { cascade: true } )
+    likes: Like[]
 }

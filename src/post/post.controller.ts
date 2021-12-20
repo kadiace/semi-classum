@@ -4,9 +4,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
-import { getConnection, getRepository } from 'typeorm';
-import { Space } from '../space/entities/space.entity'
-import { Post_ } from './entities/post.entity';
 
 @Controller('post')
 export class PostController {
@@ -46,28 +43,18 @@ export class PostController {
     return this.postService.findOne(+id);
   }
 
+  @Get('space/:id')
+  findBySpace(@Param('id') id: string) {
+    return this.spaceService.findBySpace(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);
   }
 
-  @Delete(':ids')
-  async remove(@Param('ids') ids: string) {
-    const ids_ = ids.split('|')
-    if (ids_.length != 2) console.log('Invalid syntax, we need 2 ids.')
-    else {
-      const info = await getRepository(Post_)
-        .createQueryBuilder('post')
-        .leftJoinAndSelect('post.space', 'space')
-        .where('post.id = :id', { id: +ids[0] })
-        .getOne()
-      if (!info) { console.log('Cannot find space.') } 
-      else {
-        if ((+ids_[1] != info.uploaderId) && (+ids_[1] != info.space.adminId)) {
-              console.log('Permission denied')
-            }
-            else { return this.postService.remove(+ids_[0]) }
-      }
-    }
+  @Delete(':postId/user/:userId')
+  async remove(@Param('postId') postId: string, @Param('userId') userId: string) {
+    this.postService.remove(+postId, +userId)
   }
 }

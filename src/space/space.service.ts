@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserspaceDto } from 'src/userspace/dto/create-userspace.dto';
 import { UserspaceService } from 'src/userspace/userspace.service';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
 import { Space } from './entities/space.entity';
@@ -37,11 +37,29 @@ export class SpaceService {
     return this.spaceService.findOne({id});
   }
 
+  async findBySpace(id: number) {
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.posts', 'post')
+        .where('space.id = :id', { id: id })
+        .getOne()
+    if (!info) { console.log('there is no space.') }
+    else { return info.posts }
+  }
+
   update(id: number, updateSpaceDto: UpdateSpaceDto) {
     return this.spaceService.update(id, updateSpaceDto);
   }
 
-  remove(id: number) {
-    return this.spaceService.delete({id});
+  async remove(spaceId: number, userId: number) {
+    const info = await this.findOne(spaceId)
+    if (!info) { console.log('Cannot find space.') }
+    else {
+      if (info.adminId != userId){ console.log('Not admin.') }
+      else { return this.spaceService.delete(spaceId); }
+    }
+  }
+  async removeForce(spaceId: number) {
+    return this.spaceService.delete(spaceId)
   }
 }
