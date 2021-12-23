@@ -13,22 +13,22 @@ export class PostController {
 
   @Post()
   async create(@Body() createPostDto: CreatePostDto) {
-    const space = this.spaceService.findOne(createPostDto.spaceId)
+    const space = await this.spaceService.findOne(createPostDto.spaceId)
 
-    if (!(await space)) { console.log('Invalid space') }
+    if (!space) { console.log('Invalid space') }
     else {
       if (createPostDto.isnotify
-        && (createPostDto.uploaderId != (await space).adminId)) {
+        && (createPostDto.uploaderId != space.adminId)) {
         console.log('Only admin can post notify.')
       }
       else if (!createPostDto.isnotify
-        && (createPostDto.uploaderId == (await space).adminId) ) {
+        && (createPostDto.uploaderId == space.adminId) ) {
         console.log('Admin can post only notify.')
       }
       else {
-        const user = this.userService.findOne(createPostDto.uploaderId)
-        if (!(await user)) { console.log('Invalid user') }
-        else { return this.postService.create(await user, await space, createPostDto); }
+        const user = await this.userService.findOne(createPostDto.uploaderId)
+        if (!user) { console.log('Invalid user') }
+        else { return this.postService.create(user, space, createPostDto); }
       }
     }
   }
@@ -50,12 +50,10 @@ export class PostController {
 
   @Get('space/:id/notify/:bool')
   findQuestionBySpace(@Param('id') id: string, @Param('bool') bool: string) {
-    if (+bool) { 
-      console.log('a')
+    if (+bool) {
       return this.spaceService.findNotifyBySpace(+id); 
     }
-    else { 
-      console.log('b')
+    else {
       return this.spaceService.findQuestionBySpace(+id); 
     }
   }

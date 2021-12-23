@@ -14,11 +14,11 @@ export class ChatController {
   @Post()
   async create(@Body() createChatDto: CreateChatDto) {
 
-    const post = this.postService.findOne(createChatDto.postId)
-    const commenter = this.userService.findOne(createChatDto.commenterId)
+    const post = await this.postService.findOne(createChatDto.postId)
+    const commenter = await this.userService.findOne(createChatDto.commenterId)
 
-    if (!(await post) || !(await commenter)) { console.log('Invalid post or user') }
-    else { return this.chatService.create(await post, await commenter, createChatDto); }    
+    if (!post || !commenter) { console.log('Invalid post or user') }
+    else { return this.chatService.create(post, commenter, createChatDto); }    
   }
 
   @Get()

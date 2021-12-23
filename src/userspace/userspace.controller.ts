@@ -14,13 +14,13 @@ export class UserspaceController {
 
   @Post()
   async create(@Body() createUserspaceDto: CreateUserspaceDto) {
-    const user = this.userService.findOne(createUserspaceDto.userId)
-    const space = this.spaceService.findOne(createUserspaceDto.spaceId)
+    const user = await this.userService.findOne(createUserspaceDto.userId)
+    const space = await this.spaceService.findOne(createUserspaceDto.spaceId)
 
-    if (!(await user) || !(await space)) { console.log('Invalid user, space') }
+    if (!user || !space) { console.log('Invalid user, space') }
     else { 
-      createUserspaceDto.user = await user;
-      createUserspaceDto.space = await space;
+      createUserspaceDto.user = user;
+      createUserspaceDto.space = space;
       return this.userspaceService.create(createUserspaceDto)
     }
   }
