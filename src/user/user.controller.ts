@@ -13,7 +13,8 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Param() param: string) {
+    if (process.env.NODE_ENV == 'dev') { console.log('GET ' + param) }
     return this.userService.findAll();
   }
 

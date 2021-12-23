@@ -9,6 +9,7 @@ import { ChatModule } from './chat/chat.module';
 import { UserspaceModule } from './userspace/userspace.module';
 import { LikeModule } from './like/like.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from 'Joi';
 
 @Module({
@@ -42,7 +43,8 @@ import * as Joi from 'Joi';
     PostModule,
     ChatModule,
     UserspaceModule,
-    LikeModule
+    LikeModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -55,6 +55,5 @@ export class UserspaceController {
       if (info.space.adminId == info.userId) { return this.spaceService.removeForce(info.spaceId) }
       else { return this.userspaceService.remove(info.id) }
     }
-    
   }
 }

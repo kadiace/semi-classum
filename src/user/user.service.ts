@@ -20,6 +20,14 @@ export class UserService {
     return this.userService.findOne({id});
   }
 
+  async findByUsername(username: string): Promise<User | undefined> {
+    const info = await getRepository(User)
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username: username})
+      .getOne()
+    return info
+  }
+
   async findByAdmin(id: number) {
     const info = await getRepository(User)
         .createQueryBuilder('user')
