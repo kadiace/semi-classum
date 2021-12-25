@@ -4,6 +4,7 @@ import { Post } from "src/post/entities/post.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
 import { Chat } from "src/chat/entities/chat.entity";
 import { Like } from "src/like/entities/like.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User {
@@ -15,6 +16,10 @@ export class User {
 
     @Column()
     password: string;
+
+    @Column( { nullable: true } )
+    @Exclude()
+    currentRefreshToken?: string;
 
     @Column()
     email: string;
