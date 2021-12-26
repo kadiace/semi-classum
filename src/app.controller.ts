@@ -38,8 +38,6 @@ export class AppController {
 
     res.cookie('Authentication', accessToken, accessOption);
     res.cookie('Refresh', refreshToken, refreshOption);
-
-    return user;
   }
 
   @Public()
@@ -54,11 +52,10 @@ export class AppController {
 
     await this.userService.removeRefreshToken(req.user.id);
 
-    res.cookie('Authentication', '', accessOption);
     res.cookie('Refresh', '', refreshOption);
+    res.cookie('Authentication', '', accessOption);
   }
 
-  @Public()
   @UseGuards(JwtRefreshGuard)
   @Get('auth/refresh')
   refresh(@Req() req, @Res({ passthrough: true }) res: Response) {

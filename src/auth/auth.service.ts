@@ -25,17 +25,6 @@ export class AuthService {
         return isPasswordMatch
     }
 
-    async register(user: User) {
-        try {
-            const { ...returnUser } = await this.userService.create({
-                ...user,
-              });
-        
-              return returnUser;
-        } catch (error) {
-        }
-    }
-
     getCookieWithJwtAccessToken(id: number) {
         const payload = { id };
         const token = this.jwtService.sign(payload, {
