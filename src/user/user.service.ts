@@ -71,9 +71,9 @@ export class UserService {
   async restore(id: number) {
     const user = await this.userService.findOne({
       where: { id: id },
-      relations: [ 'adspaces' ], 
+      relations: [ 'adspaces' ],
+      withDeleted: true,
     });
-    return this.userService.restore(user)
-    // return this.userService.restore(id)
+    return this.userService.recover(user)
   }
 }

@@ -44,13 +44,23 @@ export class SpaceService {
   }
 
   async findQuestionBySpace(id: number): Promise<Post[] | undefined> {
-    const space = await this.spaceService.findOne(id, { relations: ['posts'] })
-    return space.posts.filter(post => !(post.isnotify))
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.posts', 'post')
+        .where('space.id = :id', { id: id })
+        .andWhere('post.isnotify = :bool', { bool: 0 })
+        .getOne()
+    return info.posts
   }
 
   async findNotifyBySpace(id: number): Promise<Post[] | undefined> {
-    const space = await this.spaceService.findOne(id, { relations: ['posts'] })
-    return space.posts.filter(post => post.isnotify)
+    const info = await getRepository(Space)
+        .createQueryBuilder('space')
+        .leftJoinAndSelect('space.posts', 'post')
+        .where('space.id = :id', { id: id })
+        .andWhere('post.isnotify = :bool', { bool: 1 })
+        .getOne()
+    return info.posts
   }
 
   update(id: number, updateSpaceDto: UpdateSpaceDto) {
@@ -68,4 +78,14 @@ export class SpaceService {
   async removeForce(spaceId: number) {
     return this.spaceService.delete(spaceId)
   }
+
+  async restore(spaceId: number, userId: number) {
+    const info = await this.spaceService.findOne(spaceId, { withDeleted: true })
+    if (!info) { console.log('Cannot find space.') }
+    else {
+      if (info.adminId != userId){ console.log('Not admin.') }
+      else { return this.spaceService.restore(spaceId); }
+    }
+  }
+
 }
