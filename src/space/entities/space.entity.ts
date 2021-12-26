@@ -22,7 +22,7 @@ export class Space {
     @JoinColumn()
     admin: User;
 
-    @OneToMany(() => Userspace, (userspace) => userspace.user,
+    @OneToMany(() => Userspace, (userspace) => userspace.space,
         { cascade: true } )
     users: Userspace[];
 

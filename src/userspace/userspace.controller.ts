@@ -47,18 +47,25 @@ export class UserspaceController {
 
   // check user id, and space id valid, and delete userspace.
   @Delete('user/:userId/space/:spaceId')
-  async remove(@Param('userid') userId: string, @Param('spaceId') spaceId: string, @Req() req: Request) {
+  async remove(@Param('userId') userId: string, @Param('spaceId') spaceId: string, @Req() req: Request) {
     if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
-    const info = await getRepository(Userspace)
-      .createQueryBuilder('userspace')
-      .leftJoinAndSelect('userspace.space', 'space')
-      .where('userspace.userId = :userId', { userId : +userId })
-      .where('userspace.spaceId = :spaceId', { spaceId : +spaceId })
-      .getOne()
+    const info = await this.userspaceService.findUS(+userId, +spaceId, false);
 
     if (!info) { console.log('There is no user&space relationship.') }
     else { 
-      if (info.space.adminId == info.userId) { return this.spaceService.removeForce(info.spaceId) }
+      if (info.space.adminId == info.userId) { return this.spaceService.remove(info.spaceId, info.userId) }
+      else { return this.userspaceService.remove(info.id) }
+    }
+  }
+
+  @Get('restore/user/:userId/space/:spaceId')
+  async restore(@Param('userId') userId: string, @Param('spaceId') spaceId: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
+    const info = await this.userspaceService.findUS(+userId, +spaceId, true);
+
+    if (!info) { console.log('There is no user&space relationship.') }
+    else { 
+      if (info.space.adminId == info.userId) { return this.spaceService.restore(info.spaceId, info.userId) }
       else { return this.userspaceService.remove(info.id) }
     }
   }

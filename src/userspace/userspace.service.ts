@@ -14,7 +14,19 @@ export class UserspaceService {
   }
 
   findAll() {
-    return this.userspaceService.find();
+    return this.userspaceService.find({ withDeleted: true });
+  }
+
+  async findUS(userId: number, spaceId: number, withDelete: boolean) {
+    const temp = await this.userspaceService.findOne({
+      withDeleted: withDelete,
+      where: {
+        'userId': userId,
+        'spaceId': spaceId,
+      },
+      relations: [ 'user', 'space' ]
+    })
+    return temp
   }
 
   async findByUser(id: number) {
@@ -38,6 +50,10 @@ export class UserspaceService {
   }
 
   remove(id: number) {
-    return this.userspaceService.delete({id});
+    return this.userspaceService.softDelete({id});
+  }
+
+  restore(id: number) {
+    return this.userspaceService.restore({id});
   }
 }

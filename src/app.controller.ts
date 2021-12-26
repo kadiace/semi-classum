@@ -21,7 +21,8 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  async login(@Request() req, @Res({ passthrough: true }) res: Response) {
+  async login(@Req() req, @Res({ passthrough: true }) res: Response) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     const user = req.user;
     const {
       accessToken,
@@ -44,7 +45,8 @@ export class AppController {
   @Public()
   @UseGuards(JwtRefreshGuard)
   @Post('auth/logout')
-  async logOut(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     const {
       accessOption,
       refreshOption,
@@ -60,18 +62,19 @@ export class AppController {
   @UseGuards(JwtRefreshGuard)
   @Get('auth/refresh')
   refresh(@Req() req, @Res({ passthrough: true }) res: Response) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     const user = req.user;
     const {
       accessToken,
       ...accessOption
     } = this.authService.getCookieWithJwtAccessToken(user.id);
     res.cookie('Authentication', accessToken, accessOption);
-    return user;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return req.user;
   }
 }

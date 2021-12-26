@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
+import { Column, Entity, OneToMany, ManyToOne, PrimaryGeneratedColumn, JoinColumn, DeleteDateColumn } from "typeorm";
 import { User } from "src/user/entities/user.entity";
 import { Chat } from "src/chat/entities/chat.entity";
 import { Space } from "src/space/entities/space.entity";
@@ -13,6 +13,9 @@ class Post {
 
     @Column()
     isnotify : boolean;
+
+    @DeleteDateColumn()
+    deleteAt?: Date;
 
     @Column( { nullable: true } )
     uploaderId: number;

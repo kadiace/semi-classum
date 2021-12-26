@@ -24,7 +24,7 @@ export class PostService {
   }
 
   findAll() {
-    return this.postService.find();
+    return this.postService.find({ withDeleted: true });
   }
 
   findOne(id: number) {
@@ -47,7 +47,31 @@ export class PostService {
         && (userId != info.space.adminId)) {
             console.log('Permission denied')
       }
-      else { this.postService.delete(postId); }
+      else { return this.postService.softDelete(postId); }
+    }
+  }
+
+  async removeForce(id: number) {
+    return this.postService.delete(id)
+  }
+
+  async restore(postId: number, userId: number) {
+    // const info = await getRepository(Post)
+    //     .createQueryBuilder('post')
+    //     .leftJoinAndSelect('post.space', 'space')
+    //     .where('post.id = :id', { id: postId })
+    //     .getOne()
+    const info = await this.postService.findOne(postId, {
+      withDeleted: true,
+      relations: ['space']
+    })
+    if (!info) { console.log('Cannot find space.') } 
+    else {
+      if ((userId != info.uploaderId) 
+        && (userId != info.space.adminId)) {
+            console.log('Permission denied')
+      }
+      else { return this.postService.restore(postId); }
     }
   }
 }

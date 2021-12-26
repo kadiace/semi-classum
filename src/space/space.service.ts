@@ -31,7 +31,7 @@ export class SpaceService {
   }
 
   findAll() {
-    return this.spaceService.find();
+    return this.spaceService.find({ withDeleted: true });
   }
 
   findOne(id: number) {
@@ -68,13 +68,13 @@ export class SpaceService {
   }
 
   async remove(spaceId: number, userId: number) {
-    const info = await this.findOne(spaceId)
+    const info = await this.spaceService.findOne(spaceId)
     if (!info) { console.log('Cannot find space.') }
     else {
       if (info.adminId != userId){ console.log('Not admin.') }
       else { 
         const space = await this.spaceService.findOne(spaceId, {
-          relations: [ 'users' ],
+          relations: [ 'users', 'posts' ],
         });
         return this.spaceService.softRemove(space); 
       }
@@ -91,7 +91,8 @@ export class SpaceService {
       if (info.adminId != userId){ console.log('Not admin.') }
       else {
         const space = await this.spaceService.findOne(spaceId, {
-          relations: [ 'users' ],
+          withDeleted: true,
+          relations: [ 'users', 'posts' ],
         });
         return this.spaceService.recover(space);
       }

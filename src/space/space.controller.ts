@@ -52,13 +52,13 @@ export class SpaceController {
   @Delete(':spaceId/user/:userId')
   async remove(@Param('spaceId') spaceId: string, @Param('userId') userId: string, @Req() req: Request) {
     if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
-    this.spaceService.remove(+spaceId, +userId)
+    return this.spaceService.remove(+spaceId, +userId)
   }
 
   @Get('restore/:spaceId/user/:userId')
   async restore(@Param('spaceId') spaceId: string, @Param('userId') userId: string, @Req() req: Request) {
     if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
-    this.spaceService.restore(+spaceId, +userId)
+    return this.spaceService.restore(+spaceId, +userId)
   }
 
 }

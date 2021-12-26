@@ -71,14 +71,14 @@ export class UserService {
 
   async softDelete(id: number) {
     const user = await this.userService.findOne(id, {
-      relations: [ 'spaces', 'adspaces', ],
+      relations: [ 'spaces', 'adspaces', 'adspaces.posts', ],
     });
     return this.userService.softRemove(user);
   }
 
   async restore(id: number) {
     const user = await this.userService.findOne(id, {
-      relations: [ 'spaces', 'adspaces', ],
+      relations: [ 'spaces', 'adspaces', 'adspaces.posts', ],
       withDeleted: true,
     });
     return this.userService.recover(user)

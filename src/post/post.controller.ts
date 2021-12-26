@@ -5,12 +5,14 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
 import { Request } from 'express';
+import { UserspaceService } from 'src/userspace/userspace.service';
 
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService,
     private readonly userService: UserService,
-    private readonly spaceService: SpaceService) {}
+    private readonly spaceService: SpaceService,
+    private readonly userspaceService: UserspaceService) {}
 
   @Post()
   async create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {
@@ -19,7 +21,11 @@ export class PostController {
 
     if (!space) { console.log('Invalid space') }
     else {
-      if (createPostDto.isnotify
+
+      if(!(await this.userspaceService.findUS(createPostDto.uploaderId, createPostDto.spaceId, false))){
+        console.log('Not in space.')
+      }
+      else if (createPostDto.isnotify
         && (createPostDto.uploaderId != space.adminId)) {
         console.log('Only admin can post notify.')
       }
@@ -73,6 +79,19 @@ export class PostController {
   @Delete(':postId/user/:userId')
   async remove(@Param('postId') postId: string, @Param('userId') userId: string, @Req() req: Request) {
     if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
-    this.postService.remove(+postId, +userId)
+    return this.postService.remove(+postId, +userId)
   }
+
+  @Delete(':id')
+  async removeForce(@Param('id') id: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
+    return this.postService.removeForce(+id)
+  }
+
+  @Get('restore/:postId/user/:userId')
+  async restore(@Param('postId') postId: string, @Param('userId') userId: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
+    return this.postService.restore(+postId, +userId)
+  }
+
 }
