@@ -72,7 +72,12 @@ export class SpaceService {
     if (!info) { console.log('Cannot find space.') }
     else {
       if (info.adminId != userId){ console.log('Not admin.') }
-      else { return this.spaceService.softDelete(spaceId); }
+      else { 
+        const space = await this.spaceService.findOne(spaceId, {
+          relations: [ 'users' ],
+        });
+        return this.spaceService.softRemove(space); 
+      }
     }
   }
   async removeForce(spaceId: number) {
@@ -84,7 +89,12 @@ export class SpaceService {
     if (!info) { console.log('Cannot find space.') }
     else {
       if (info.adminId != userId){ console.log('Not admin.') }
-      else { return this.spaceService.restore(spaceId); }
+      else {
+        const space = await this.spaceService.findOne(spaceId, {
+          relations: [ 'users' ],
+        });
+        return this.spaceService.recover(space);
+      }
     }
   }
 

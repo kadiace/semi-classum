@@ -61,17 +61,15 @@ export class UserService {
   }
 
   async softDelete(id: number) {
-    const user = await this.userService.findOne({
-      where: { id: id },
-      relations: [ 'adspaces' ], 
+    const user = await this.userService.findOne(id, {
+      relations: [ 'spaces', 'adspaces', ],
     });
     return this.userService.softRemove(user);
   }
 
   async restore(id: number) {
-    const user = await this.userService.findOne({
-      where: { id: id },
-      relations: [ 'adspaces' ],
+    const user = await this.userService.findOne(id, {
+      relations: [ 'spaces', 'adspaces', ],
       withDeleted: true,
     });
     return this.userService.recover(user)

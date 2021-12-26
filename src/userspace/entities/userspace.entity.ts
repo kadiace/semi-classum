@@ -1,11 +1,14 @@
 import { Space } from "src/space/entities/space.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Userspace {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @DeleteDateColumn()
+    deleteAt?: Date;
 
     @Column( {nullable: false} )
     userId: number;

@@ -37,7 +37,7 @@ export class User {
     deleteAt?: Date;
 
     @OneToMany(() => Userspace, (userspace) => userspace.user,
-        { cascade: ['soft-remove'] } )
+        { cascade: true} )
     spaces: Userspace[];
 
     @OneToMany(() => Space, (space) => space.admin,
