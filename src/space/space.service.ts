@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from 'src/post/entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserspaceDto } from 'src/userspace/dto/create-userspace.dto';
 import { UserspaceService } from 'src/userspace/userspace.service';
@@ -37,36 +38,19 @@ export class SpaceService {
     return this.spaceService.findOne({id});
   }
 
-  async findBySpace(id: number) {
-    const info = await getRepository(Space)
-        .createQueryBuilder('space')
-        .leftJoinAndSelect('space.posts', 'post')
-        .where('space.id = :id', { id: id })
-        .getOne()
-    if (!info) { console.log('there is no space.') }
-    else { return info.posts }
+  async findBySpace(id: number): Promise<Post[] | undefined> {
+    const space = await this.spaceService.findOne(id, { relations: ['posts'] })
+    return space.posts
   }
 
-  async findQuestionBySpace(id: number) {
-    const info = await getRepository(Space)
-        .createQueryBuilder('space')
-        .leftJoinAndSelect('space.posts', 'post')
-        .where('space.id = :id', { id: id })
-        .andWhere('post.isnotify = :bool', { bool: 0 })
-        .getOne()
-    if (!info) { console.log('there is no space.') }
-    else { return info.posts }
+  async findQuestionBySpace(id: number): Promise<Post[] | undefined> {
+    const space = await this.spaceService.findOne(id, { relations: ['posts'] })
+    return space.posts.filter(post => !(post.isnotify))
   }
 
-  async findNotifyBySpace(id: number) {
-    const info = await getRepository(Space)
-        .createQueryBuilder('space')
-        .leftJoinAndSelect('space.posts', 'post')
-        .where('space.id = :id', { id: id })
-        .andWhere('post.isnotify = :bool', { bool: 1 })
-        .getOne()
-    if (!info) { console.log('there is no space.') }
-    else { return info.posts }
+  async findNotifyBySpace(id: number): Promise<Post[] | undefined> {
+    const space = await this.spaceService.findOne(id, { relations: ['posts'] })
+    return space.posts.filter(post => post.isnotify)
   }
 
   update(id: number, updateSpaceDto: UpdateSpaceDto) {

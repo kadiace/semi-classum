@@ -49,7 +49,7 @@ export class UserService {
 
   async findByAdmin(id: number): Promise<Space[] | undefined> {
     const user = await this.userService.findOne(id, { relations: ['adspaces']})
-     return user.adspaces
+    return user.adspaces
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -61,11 +61,19 @@ export class UserService {
   }
 
   async softDelete(id: number) {
-    // const user = await this.userService.findOne(id, { relations: ['adspaces']})
-    return this.userService.softDelete(id)
+    const user = await this.userService.findOne({
+      where: { id: id },
+      relations: [ 'adspaces' ], 
+    });
+    return this.userService.softRemove(user);
   }
 
-  restore(id: number) {
-    return this.userService.restore(id)
+  async restore(id: number) {
+    const user = await this.userService.findOne({
+      where: { id: id },
+      relations: [ 'adspaces' ], 
+    });
+    return this.userService.restore(user)
+    // return this.userService.restore(id)
   }
 }
