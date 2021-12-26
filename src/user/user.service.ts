@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Space } from 'src/space/entities/space.entity';
-import { createConnection, getRepository, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from "./entities/user.entity";
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(User) private userService: Repository<User>) {}
-  create(createUserDto: CreateUserDto) {
+  
+  async create(createUserDto: CreateUserDto) {
+    const hashPW = await bcrypt.hash(createUserDto.password, +process.env.SALT_OR_ROUNDS);
+    createUserDto.password = hashPW
     return this.userService.save(createUserDto);
   }
 
@@ -52,7 +56,12 @@ export class UserService {
     return user.adspaces
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.password) {
+      const hashPW = await bcrypt.hash(updateUserDto.password, +process.env.SALT_OR_ROUNDS);
+      updateUserDto.password = hashPW
+      console.log(hashPW)
+    }
     return this.userService.update(id, updateUserDto);
   }
 

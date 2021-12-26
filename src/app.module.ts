@@ -29,6 +29,7 @@ import * as Joi from 'Joi';
         JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        SALT_OR_ROUNDS: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
