@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
 import { SpaceService } from 'src/space/space.service';
+import { Request } from 'express';
 
 @Controller('post')
 export class PostController {
@@ -12,7 +13,8 @@ export class PostController {
     private readonly spaceService: SpaceService) {}
 
   @Post()
-  async create(@Body() createPostDto: CreatePostDto) {
+  async create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     const space = await this.spaceService.findOne(createPostDto.spaceId)
 
     if (!space) { console.log('Invalid space') }
@@ -34,22 +36,26 @@ export class PostController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.postService.findAll();
   }
   // get all posts by space id.
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.postService.findOne(+id);
   }
 
   @Get('space/:id')
-  findBySpace(@Param('id') id: string) {
+  findBySpace(@Param('id') id: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.spaceService.findBySpace(+id);
   }
 
   @Get('space/:id/notify/:bool')
-  findQuestionBySpace(@Param('id') id: string, @Param('bool') bool: string) {
+  findQuestionBySpace(@Param('id') id: string, @Param('bool') bool: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     if (+bool) {
       return this.spaceService.findNotifyBySpace(+id); 
     }
@@ -59,12 +65,14 @@ export class PostController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.postService.update(+id, updatePostDto);
   }
 
   @Delete(':postId/user/:userId')
-  async remove(@Param('postId') postId: string, @Param('userId') userId: string) {
+  async remove(@Param('postId') postId: string, @Param('userId') userId: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     this.postService.remove(+postId, +userId)
   }
 }

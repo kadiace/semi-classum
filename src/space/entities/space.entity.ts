@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "src/user/entities/user.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
 import { Post } from "src/post/entities/post.entity";
@@ -10,6 +10,9 @@ export class Space {
 
     @Column()
     title: string;
+
+    @DeleteDateColumn()
+    deleteAt?: Date;
 
     @Column( {nullable: false} )
     adminId: number;

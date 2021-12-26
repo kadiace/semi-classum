@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { UserService } from './user/user.service';
 import { Response } from 'express';
-import { JwtRefreshGuard } from './auth/jwt-refresh.guard';
+import { AppService } from './app.service';
+import { UserService } from './user/user.service';
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/guards/local-auth.guard';
+import { JwtRefreshGuard } from './auth/guards/jwt-refresh.guard';
 import { Public } from './skip-auth.decorator';
 
 @Controller()

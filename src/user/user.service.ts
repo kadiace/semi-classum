@@ -1,7 +1,7 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { getRepository, Repository } from 'typeorm';
+import { Space } from 'src/space/entities/space.entity';
+import { createConnection, getRepository, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from "./entities/user.entity";
@@ -14,9 +14,9 @@ export class UserService {
   }
 
   findAll() {
-    return this.userService.find();
+    return this.userService.find({withDeleted: true});
   }
-  
+
   findOne(id: number) {
     return this.userService.findOne({id});
   }
@@ -47,14 +47,9 @@ export class UserService {
     return info
   }
 
-  async findByAdmin(id: number) {
-    const info = await getRepository(User)
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.adspaces', 'space')
-        .where('user.id = :id', { id: id })
-        .getOne()
-    if (!info) { console.log('there is no user.') }
-    else { return info.adspaces }
+  async findByAdmin(id: number): Promise<Space[] | undefined> {
+    const user = await this.userService.findOne(id, { relations: ['adspaces']})
+     return user.adspaces
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -63,5 +58,14 @@ export class UserService {
 
   remove(id: number) {
     return this.userService.delete({id});
+  }
+
+  async softDelete(id: number) {
+    // const user = await this.userService.findOne(id, { relations: ['adspaces']})
+    return this.userService.softDelete(id)
+  }
+
+  restore(id: number) {
+    return this.userService.restore(id)
   }
 }

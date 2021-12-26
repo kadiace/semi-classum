@@ -78,7 +78,7 @@ export class SpaceService {
     if (!info) { console.log('Cannot find space.') }
     else {
       if (info.adminId != userId){ console.log('Not admin.') }
-      else { return this.spaceService.delete(spaceId); }
+      else { return this.spaceService.softDelete(spaceId); }
     }
   }
   async removeForce(spaceId: number) {

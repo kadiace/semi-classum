@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Space } from "src/space/entities/space.entity";
 import { Post } from "src/post/entities/post.entity";
 import { Userspace } from "src/userspace/entities/userspace.entity";
@@ -32,6 +32,9 @@ export class User {
 
     @Column()
     profile: string;
+
+    @DeleteDateColumn()
+    deleteAt?: Date;
 
     @OneToMany(() => Userspace, (userspace) => userspace.user,
         { cascade: true } )

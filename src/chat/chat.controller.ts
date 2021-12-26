@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { PostService } from 'src/post/post.service';
 import { UserService } from 'src/user/user.service';
 import { ChatService } from './chat.service';
@@ -12,7 +13,8 @@ export class ChatController {
     private readonly postService: PostService) {}
 
   @Post()
-  async create(@Body() createChatDto: CreateChatDto) {
+  async create(@Body() createChatDto: CreateChatDto, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
 
     const post = await this.postService.findOne(createChatDto.postId)
     const commenter = await this.userService.findOne(createChatDto.commenterId)
@@ -22,22 +24,26 @@ export class ChatController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.chatService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.chatService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
+  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     return this.chatService.update(+id, updateChatDto);
   }
 
   @Delete(':chatId/user/:userId')
-  async remove(@Param('chatId') chatId: string, @Param('userId') userId: string) {
+  async remove(@Param('chatId') chatId: string, @Param('userId') userId: string, @Req() req: Request) {
+    if (process.env.NODE_ENV == 'dev') { console.log( req.method + ' ' + req.url ) }
     this.chatService.remove(+chatId, +userId)
   }
 }
